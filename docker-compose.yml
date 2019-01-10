@@ -10,7 +10,7 @@ services:
             dockerfile: Dockerfile
         volumes:
             #- /mnt/rasp-pi-root:/mnt/rasp-pi-root
-            - ./qt5pi_builder:/opt/qt5pi_builder 
+            # - ./qt5pi_builder:/opt/qt5pi_builder 
 
         networks:
             - network1

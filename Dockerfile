@@ -20,8 +20,7 @@ RUN apt-get update && apt-get install -y \
 	multistrap \
 	cmake \
 	python \
-	vim \  # this  could be gone
-	pkg-config \
+	vim \  
 	build-dep qt5-default \
   libxcb-xinerama0-dev \
   bison gperf libicu-dev \
@@ -31,18 +30,20 @@ RUN apt-get update && apt-get install -y \
 ENV PATH_GCC=/opt/
 ENV SYSROOT=/tmp/workspace/sysroot
 
-VOLUME ["$PATH_GCC"] 
-WORKDIR  $PATH_GCC 
-RUN wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz
-	tar -kx --xz -f gcc-li*.tar.xz
+VOLUME [/opt/] 
+WORKDIR  /opt/
+RUN \
+	pwd \
+	wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz \
+	tar -kx --xz -f gcc-li*.tar.xz 
 RUN ls -la \
-	pwd
 
 
 VOLUME ["/opt/qt5pibuilder"]
 WORKDIR /opt/qt5pibuilder
-RUN wget https://github.com/gpmontt/CrossCompilerRpi3QT5/releases/download/file_2018-12-18/qt5pibuilder.zip 
-
+RUN \
+	wget https://github.com/gpmontt/CrossCompilerRpi3QT5/releases/download/file_2018-12-18/qt5pibuilder.zip \
+	pwd
 # download the sysroot need to the compilation.
 #VOLUME ["/mnt/raspbian/rpiSysroot-2018-06-27-raspbian-stretch-lite-updated/sysroot"]
 #RUN \
@@ -51,7 +52,7 @@ RUN wget https://github.com/gpmontt/CrossCompilerRpi3QT5/releases/download/file_
 
 
 # WORKDIR used to change the working directory
-WORKDIR /tmp/qt5pibuilder
+#WORKDIR /tmp/qt5pibuilder
 
 
 #ENV name velo  
