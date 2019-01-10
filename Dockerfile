@@ -4,7 +4,7 @@ FROM ubuntu:18.04
 MAINTAINER Giovanni Perez
 
 # Install usefull packages for project
-RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list
+#RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list
 # this command is just temporary, you probably are going to do something else
 #
 #
