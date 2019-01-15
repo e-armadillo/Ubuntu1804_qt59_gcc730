@@ -7,6 +7,8 @@ MAINTAINER Giovanni Perez
 #RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list
 # this command is just temporary, you probably are going to do something else
 #
+COPY sources.list /etc/apt/ 
+
 
 RUN apt-get update && apt-get install -y \
 	build-essential \
@@ -29,4 +31,4 @@ RUN apt-get update && apt-get install -y \
 # Usage: ADD [source directory or URL] [destination directory]
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 0755 /entrypoint.sh
-ENTRYPOINT ["/bin/sh","entrypoint.sh"]
+ENTRYPOINT ["/bin/sh","-c","entrypoint.sh"]
