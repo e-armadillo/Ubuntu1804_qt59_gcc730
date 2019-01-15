@@ -9,8 +9,12 @@ MAINTAINER Giovanni Perez
 #
 COPY sources.list /etc/apt/ 
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod 0755 /entrypoint.sh
+ENTRYPOINT ["/bin/sh","-c","entrypoint.sh"]
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update 
+RUN apt-get install -y \
 	build-essential \
 	wget \
 	curl \
@@ -24,11 +28,7 @@ RUN apt-get update && apt-get install -y \
 	python \  
 	pkg-config \
 	bison gperf libicu-dev \
-	&& apt-get build-dep qt5-default \
 	&& rm -rf /var/lib/apt/lists/*
 
 
 # Usage: ADD [source directory or URL] [destination directory]
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod 0755 /entrypoint.sh
-ENTRYPOINT ["/bin/sh","-c","entrypoint.sh"]
