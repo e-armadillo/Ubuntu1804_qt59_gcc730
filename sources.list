@@ -1,41 +1,28 @@
+
 # See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
-# newer versions of the distribution.
+
+
 deb http://de.archive.ubuntu.com/ubuntu/ bionic main restricted
 deb-src http://de.archive.ubuntu.com/ubuntu/ bionic main universe multiverse restricted
 
 deb http://de.archive.ubuntu.com/ubuntu/ bionic universe
-## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu 
-## team, and may not be under a free licence. Please satisfy yourself as to 
-## your rights to use the software. Also, please note that software in 
-## multiverse WILL NOT receive any review or updates from the Ubuntu
-## security team.
+
+
 deb http://de.archive.ubuntu.com/ubuntu/ bionic multiverse
 deb-src http://de.archive.ubuntu.com/ubuntu/ xenial-updates multiverse
 
-## N.B. software from this repository may not have been tested as
-## extensively as that contained in the main release, although it includes
-## newer versions of some applications which may provide useful features.
-## Also, please note that software in backports WILL NOT receive any review
-## or updates from the Ubuntu security team.
+
 deb http://de.archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
 deb-src http://de.archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
 
-## Uncomment the following two lines to add software from Canonical's
-## 'partner' repository.
-## This software is not part of Ubuntu, but is offered by Canonical and the
-## respective vendors as a service to Ubuntu users.
+
 deb http://archive.canonical.com/ubuntu bionic partner
 deb-src http://archive.canonical.com/ubuntu bionic partner
 
-# deb-src http://security.ubuntu.com/ubuntu xenial-security universe
-# deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main # disabled on upgrade to bionic
-# deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main
 deb http://de.archive.ubuntu.com/ubuntu/ bionic-updates restricted main multiverse universe
 deb http://security.ubuntu.com/ubuntu/ bionic-security restricted main multiverse universe
 
-
 deb http://de.archive.ubuntu.com/ubuntu/ bionic-proposed multiverse main restricted universe
 
-#deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
-# deb-src [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
-#deb https://pkg.jenkins.io/debian-stable binary/
+
+
