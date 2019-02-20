@@ -44,17 +44,17 @@ RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=down
 	&& ls -lah \
 	&& pwd
 
-
-#Preparation of qt5 and qt5pi 
-WORKDIR /opt/
-RUN wget https://github.com/gpmontt/CrossCompilerRpi3QT5/releases/download/file_2019-01-16/qt5pibuilder.zip \
-			&& unzip qt5pi* 	\
-			&& rm *.zip
-RUN /opt/qt5pibuilder/qt5/bin/qmake -query
+#Prepare gcc-linaro
 
 RUN wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz \
 	&& tar -kx --xz -f gcc-linaro-$GCC_VERSION.tar.xz \
 	&& mv  gcc-linaro-7.3.1-2018*  $PATH_GCC \
 	&& rm -rf *.tar.* 
 RUN ls -lah &&  pwd
-ENV name velo
+
+
+#WORKDIR /tmp
+#RUN wget https://github.com/gpmontt/CrossCompilerRpi3QT5/releases/download/file_2019-01-16/qt5pibuilder.zip \
+	#			&& unzip qt5pi* 	\
+	#			&& rm *.zip
+#RUN /opt/qt5pibuilder/qt5/bin/qmake -query
