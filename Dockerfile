@@ -28,15 +28,14 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # WORKDIR used to change the working directory
-RUN	mkdir -p /mnt/raspbian 
-
+RUN	mkdir -p /mnt/raspbian && mkdir -p $PATH_GCC	
 COPY qt5pibuilder /tmp/qt5pibuilder
 WORKDIR /tmp/qt5pibuilder
 RUN ls -lah
 
 # Environment sysroot for compilation 
 WORKDIR /tmp 
-RUN		wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1rsX8h1eSGwRehzPLj-u7aFtsmbpqdrDQ' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1rsX8h1eSGwRehzPLj-u7aFtsmbpqdrDQ" -O sysroot.tar.xz \
+RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1rsX8h1eSGwRehzPLj-u7aFtsmbpqdrDQ' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1rsX8h1eSGwRehzPLj-u7aFtsmbpqdrDQ" -O sysroot.tar.xz \
 	&& rm -rf /tmp/cookies.txt \
 	&& tar -kx --xz -f sysroot.tar.xz \
 	&& mv rpiSys*/sysroot /mnt/raspbian/ \
@@ -55,7 +54,7 @@ RUN /opt/qt5pibuilder/qt5/bin/qmake -query
 
 RUN wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz \
 	&& tar -kx --xz -f gcc-linaro-$GCC_VERSION.tar.xz \
-	&& mv  gcc-linaro-7.3.1-2018* gcc-linaro-$GCC_VERSION \
+	&& mv  gcc-linaro-7.3.1-2018*  $PATH_GCC \
 	&& rm -rf *.tar.* 
 RUN ls -lah &&  pwd
 ENV name velo
