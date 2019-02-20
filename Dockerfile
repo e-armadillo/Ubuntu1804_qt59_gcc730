@@ -28,7 +28,8 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # WORKDIR used to change the working directory
-RUN	mkdir -p /mnt/raspbian && mkdir -p $PATH_GCC	
+RUN	mkdir -p /mnt/raspbian && mkdir -p $PATH_GCC
+
 COPY qt5pibuilder /tmp/qt5pibuilder
 WORKDIR /tmp/qt5pibuilder
 RUN ls -lah
@@ -43,16 +44,13 @@ RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=down
 	&& rm -rf *.tar.* \
 	&& ls -lah \
 	&& pwd
-
-#Prepare gcc-linaro
-
 RUN wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz \
 	&& tar -kx --xz -f gcc-linaro-$GCC_VERSION.tar.xz \
 	&& mv  gcc-linaro-7.3.1-2018*  $PATH_GCC \
 	&& rm -rf *.tar.* 
 RUN ls -lah &&  pwd
 
-
+#Prepare gcc-linaro
 #WORKDIR /tmp
 #RUN wget https://github.com/gpmontt/CrossCompilerRpi3QT5/releases/download/file_2019-01-16/qt5pibuilder.zip \
 	#			&& unzip qt5pi* 	\
