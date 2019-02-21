@@ -9,7 +9,7 @@ MAINTAINER Giovanni Perez
 ENV GCC_VERSION=7.3.1
 ENV ARCHCROSS=arm-linux-gnueabihf-
 ENV SYSROOT=/mnt/raspbian/sysroot
-ENV PATH_GCC=/opt/gcc-linaro-7.3.1
+ENV PATH_GCC=/opt/gcc-linaro-$GCC_VERSION
 # Installation of packages used for the compilation of Xcompiler and QT5
 COPY sources.list /etc/apt/ 
 RUN apt-get update && apt-get install -y \
@@ -30,8 +30,8 @@ RUN apt-get update && apt-get install -y \
 # WORKDIR used to change the working directory
 RUN	mkdir -p /mnt/raspbian && mkdir -p $PATH_GCC
 
-COPY qt5pibuilder /tmp/qt5pibuilder
-WORKDIR /tmp/qt5pibuilder
+COPY qt5pibuilder /opt/qt5pibuilder
+WORKDIR /opt/qt5pibuilder
 RUN ls -lah
 
 # Environment sysroot for compilation 
@@ -49,6 +49,7 @@ RUN wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.0
 	&& mv  gcc-linaro-7.3.1-2018*  $PATH_GCC \
 	&& rm -rf *.tar.* 
 RUN ls -lah &&  pwd
+
 
 #Prepare gcc-linaro
 #WORKDIR /tmp

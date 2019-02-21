@@ -6,15 +6,12 @@ set -x
 #this giy need to be a variable in the future
 QT_VERSION=5.9
 # here come wich gcc tool do you want to try
-GCC_VERSION=7.3
+GCC_VERSION=7.3.1
 ARCHCROSS=arm-linux-gnueabihf-
-PATH_GCC=/tmp/workspace
+PATH_GCC=/opt/gcc-linaro-$GCC_VERSION
 
 # module used to compile Stationpedelec, in the future add qtweb
-QT_MODULES="qtquickcontrols qtdeclarative qtserialport"
-#QT_MODULES="qtxmlpatterns qtdeclarative qtserialport qtquickcontrols"
-#QT_MODULES="qtserialport"
-
+QT_MODULES="qtxmlpatterns qtdeclarative qtserialport qtquickcontrols"
 BASEDIR=$PWD
 CLEAN=true
 
@@ -22,9 +19,8 @@ CLEAN=true
 DEVICE="linux-rasp-pi3-g++"
 
 # DEVICE='linux-rasp-pi3-vc4-g++'
-#SYSROOT=/mnt/raspbian/rpiSysroot-2018-06-27-raspbian-stretch-lite-updated/sysroot
-SYSROOT=/tmp/workspace/sysroot
-COMPILER=$PATH_GCC/gcc-linaro-$GCC_VERSION.1-2018.05-x86_64_arm-linux-gnueabihf/bin/$ARCHCROSS
+SYSROOT=/mnt/raspbian/sysroot
+COMPILER=$PATH_GCC/gcc-linaro-$GCC_VERSION-2018.05-x86_64_arm-linux-gnueabihf/bin/$ARCHCROSS
 
 MAKE_OPTS=-j$( nproc)
 
@@ -76,33 +72,28 @@ done
 
 # get compiler
 echo "GET COMPILER"
-if [ ! -d $PATH_GCC/linaro-toolchain-$GCC_VERSION ]; then
-	cd $PATH_GCC
+if [ ! -d $PATH_GCC/gcc-linaro-$GCC_VERSION-2018.05-x86_64_arm-linux-gnueabihf]; then
+	cd /tmp
 	HTTP_LINARO="https://releases.linaro.org/components/toolchain/binaries/"
-  LINARO_TOOLCHAIN=$( curl -s $HTTP_LINARO  --list-only | sed -n  "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp" | grep $GCC_VERSION )
-
-	curl -s $HTTP_LINARO$LINARO_TOOLCHAIN/arm-linux-gnueabihf/ --list-only >listtoolchain 
-
-	wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz
+  #LINARO_TOOLCHAIN=$( curl -s $HTTP_LINARO  --list-only | sed -n  "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp" | grep $GCC_VERSION )
+	#curl -s $HTTP_LINARO$LINARO_TOOLCHAIN/arm-linux-gnueabihf/ --list-only >listtoolchain 
+	wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-$GCC_VERSION-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz
 	tar -kx --xz -f gcc-li*.tar.xz
+  mv  gcc-linaro-$GCC_VERSION-2018*  $PATH_GCC
+	rm -rf *.tar.*
 	cd $BASEDIR
 fi
 
 
-echo "Getting Sysroot from googledrive"
 if [ "$OPTIONSYS" = "$SYSROOT" ]; then
 	#TODO: mount  new image and install dependency to create a new sysroot_2019
-	cd /tmp/workspace
+	cd /tmp
 	wget -c https://downloads.raspberrypi.org/raspbian_latest -o raspbian.zip
-	unzip raspbian.zip -d /tmp/workspace/mysysroot_$(date -u "+%Y.%m.%d-%T")
+	unzip raspbian.zip -d /tmp/mysysroot_$(date -u "+%Y.%m.%d-%T")
   set SYSROOT=$PWD	
 	cd $BASEDIR
 else
-	cd /tmp/workspace
-	bash $BASEDIR/getsysroot
-	tar -kx --xz -f sysroot.tar.xz
-	mv /tmp/workspace/rpiSys*/sysroot sysroot
-	rm -rf /tmp/workspace/rpiSys*
+	echo "Getting Sysroot from googledrive"
 	cd $BASEDIR
 	# maybe  depricate next year
 	#  curl -JLO  "https://www.dropbox.com/s/4nm8saa2snh8un4/rpiSysroot-2018-06-27-raspbian-stretch-lite-updated.tar.xz?dl=0"
@@ -121,12 +112,10 @@ if [ ! -f sysroot-relativelinks.py ]; then
 fi
 ./sysroot-relativelinks.py $SYSROOT
 
-
 # build qtcore
 if [ ! -d qtbase ]; then
 	git clone --depth 1 git://code.qt.io/qt/qtbase.git -b $QT_VERSION
 fi
-
 
 cd qtbase
 if [ "$CLEAN" = true ]; then
@@ -159,4 +148,3 @@ done
 
 echo completed the work
 ls -lah
-printenv
