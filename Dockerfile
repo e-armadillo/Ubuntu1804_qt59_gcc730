@@ -14,6 +14,7 @@ ENV PATH_GCC=/opt/gcc-linaro-$GCC_VERSION
 COPY sources.list /etc/apt/ 
 RUN apt-get update && apt-get install -y \
 	build-essential \
+	libc6-dev\
 	wget \
 	curl \
 	gdb-multiarch \
@@ -28,14 +29,18 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # WORKDIR used to change the working directory
-RUN	mkdir -p /mnt/raspbian && mkdir -p $PATH_GCC
+RUN	mkdir -p /mnt/raspbian && mkdir -p $PATH_GCC 
 
-COPY qt5pibuilder /opt/qt5pibuilder
-WORKDIR /opt/qt5pibuilder
-RUN ls -lah
 
 # Environment sysroot for compilation 
 WORKDIR /tmp 
+#TODO: replace  RUN command by ADD. Files from remote URLs will untar the file into the ADD director
+RUN wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz \
+	&& tar -kx --xz -f gcc-linaro-$GCC_VERSION.tar.xz \
+	&& mv  gcc-linaro-7.3.1-2018*  $PATH_GCC \
+	&& rm -rf *.tar.* 
+
+
 RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1rsX8h1eSGwRehzPLj-u7aFtsmbpqdrDQ' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1rsX8h1eSGwRehzPLj-u7aFtsmbpqdrDQ" -O sysroot.tar.xz \
 	&& rm -rf /tmp/cookies.txt \
 	&& tar -kx --xz -f sysroot.tar.xz \
@@ -44,12 +49,12 @@ RUN wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=down
 	&& rm -rf *.tar.* \
 	&& ls -lah \
 	&& pwd
-RUN wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz \
-	&& tar -kx --xz -f gcc-linaro-$GCC_VERSION.tar.xz \
-	&& mv  gcc-linaro-7.3.1-2018*  $PATH_GCC \
-	&& rm -rf *.tar.* 
-RUN ls -lah &&  pwd
 
+
+COPY qt5pibuilder /opt/qt5pibuilder
+WORKDIR /opt/qt5pibuilder
+RUN ls -lah && pwd
+RUN /bin/bash -c ./build
 
 #Prepare gcc-linaro
 #WORKDIR /tmp

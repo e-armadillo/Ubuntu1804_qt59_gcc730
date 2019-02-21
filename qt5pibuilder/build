@@ -147,4 +147,3 @@ for MODULE in $QT_MODULES; do
 done
 
 echo completed the work
-ls -lah
