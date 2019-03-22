@@ -34,15 +34,16 @@ RUN	mkdir -p /mnt/raspbian && mkdir -p $PATH_GCC
 
 # Environment sysroot for compilation 
 COPY qt5pibuilder /opt/qt5pibuilder
-WORKDIR /tmp 
 #TODO: replace  RUN command by ADD. Files from remote URLs will untar the file into the ADD director
+
+WORKDIR /tmp 
+# download sysroot from google drive. TODO: find docker 
+RUN /bin/bash -c /opt/qt5pibuilder/getsysroot.sh 
 RUN wget -c https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz -P $PATH_GCC -O gcc-linaro-$GCC_VERSION.tar.xz \
 	&& tar -kx --xz -f gcc-linaro-$GCC_VERSION.tar.xz \
 	&& mv  gcc-linaro-7.3.1-2018*  $PATH_GCC \
 	&& rm -rf *.tar.* 
 
-# download sysroot from google drive. TODO: find docker 
-RUN /bin/bash -c /opt/qt5pibuilder/getsysroot.sh 
 
 
 WORKDIR /opt/qt5pibuilder
